@@ -23,7 +23,7 @@ $(function() {
 			option.text = stopMap[stopTag];
 			$stops_el.append(option);
 		});
-	});
+	}); // End of directions_el change handler
 
 	$routes_el.on('change', function(e) {
 		// When the routes dropdown changes...
@@ -37,7 +37,6 @@ $(function() {
 		// Get the config for this route and store the stops for each
 		// direction and the title of each stop for the direction change to use
 		$.get(baseUrl + '?command=routeConfig&a=ttc&r=' + e.target.value, function(xml) {
-			rrr_xmldata = xml;
 			var $xml = $(xml);
 
 			// Create a lookup for stop tags to titles
@@ -47,9 +46,10 @@ $(function() {
 			});
 
 			$xml.find('direction').each(function(index, direction) {
-				// Create option tag for each direction
 				var $direction = $(direction);
 				var directionTag = $direction.attr('tag');
+
+				// Create option tag for each direction
 				var option = document.createElement('option');
 				option.setAttribute('value', directionTag);
 				option.text = $direction.attr('title');
@@ -63,13 +63,14 @@ $(function() {
 					stopsForDirection.push($stop.attr('tag'));
 				});
 			});
-		})
+		}) // End of $.get for routeConfig
 		.done(function() {
 			$('#dropdowns').fadeIn();
 			// trigger a change event
 			$('#directions :first-child').change();
-		});
-	});
+		}); // Done for $.get on routeConfig
+	}); // End of route_el change handler
+
 	// This initial fetch will get all the TTC routes and put them in a dropdown
 	$.get(baseUrl + '?command=routeList&a=ttc', function(xml) {
 		var $xml = $(xml);
