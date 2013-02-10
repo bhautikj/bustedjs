@@ -2,6 +2,7 @@ var rrr_xmldata;
 
 $(function() {
 	var baseUrl = 'http://webservices.nextbus.com/service/publicXMLFeed';
+	var $agencies_el = $('#agencies');
 	var $routes_el = $('#routes');
 	var $directions_el = $('#directions');
 	var $stops_el = $('#stops');
@@ -10,24 +11,35 @@ $(function() {
 	// directionStops is used for storing which stops are on each direction
 	var directionStops = {};
 
-	$directions_el.on('change', function(e) {
-		// When the directions dropdown changes...
+	// When the agencies dropdown changes...
+	$agencies_el.on('change', function(e) {
+		// Do cleanup
+		$routes_el.empty();
 
-		// Clear the stops
-		$stops_el.empty();
-
-		// Add all the stops for a direction to the dropdown
-		$(directionStops[e.target.value]).each(function(index, stopTag) {
-			var option = document.createElement('option');
-			option.setAttribute('value', stopTag);
-			option.text = stopMap[stopTag];
-			$stops_el.append(option);
+		var agency = $agencies_el.val();
+		// Get all the agency routes and put them in a dropdown
+		console.log('agency: ' + agency);
+		$.get(baseUrl + '?command=routeList&a=' + agency, function(xml) {
+			var $xml = $(xml);
+			$xml.find('route').each(function(index, route) {
+				var $route = $(route);
+				var option = document.createElement('option');
+				option.setAttribute('value', $route.attr('tag'));
+				option.text = $route.attr('title').replace('-', ' '); 
+				$routes_el.append(option);
+			});
+		})
+		.done(function() {
+			// trigger a change event
+			$('#routes :first-child').change();
+		})
+		.fail(function() {
+			$('#debug').text('fail');
 		});
-	}); // End of directions_el change handler
+	});
 
+	// When the routes dropdown changes...
 	$routes_el.on('change', function(e) {
-		// When the routes dropdown changes...
-
 		// Do cleanup
 		$directions_el.empty();
 		$stops_el.empty();
@@ -36,7 +48,9 @@ $(function() {
 
 		// Get the config for this route and store the stops for each
 		// direction and the title of each stop for the direction change to use
-		$.get(baseUrl + '?command=routeConfig&a=ttc&r=' + e.target.value, function(xml) {
+		var agency = $agencies_el.val();
+		var route = e.target.value;
+		$.get(baseUrl + '?command=routeConfig&a=' + agency + '&r=' + route, function(xml) {
 			var $xml = $(xml);
 
 			// Create a lookup for stop tags to titles
@@ -59,7 +73,7 @@ $(function() {
 				directionStops[directionTag] = [];
 				stopsForDirection = directionStops[directionTag];
 				$direction.children('stop').each(function(index, stop) {
-					$stop = $(stop);
+					var $stop = $(stop);
 					stopsForDirection.push($stop.attr('tag'));
 				});
 			});
@@ -71,22 +85,37 @@ $(function() {
 		}); // Done for $.get on routeConfig
 	}); // End of route_el change handler
 
-	// This initial fetch will get all the TTC routes and put them in a dropdown
-	$.get(baseUrl + '?command=routeList&a=ttc', function(xml) {
-		var $xml = $(xml);
-		$xml.find('route').each(function(index, route) {
-			var $route = $(route);
+	// When the directions dropdown changes...
+	$directions_el.on('change', function(e) {
+		// Clear the stops
+		$stops_el.empty();
+
+		// Add all the stops for a direction to the dropdown
+		$(directionStops[e.target.value]).each(function(index, stopTag) {
 			var option = document.createElement('option');
-			option.setAttribute('value', $route.attr('tag'));
-			option.text = $route.attr('title').replace('-', ' '); 
-			$routes_el.append(option);
+			option.setAttribute('value', stopTag);
+			option.text = stopMap[stopTag];
+			$stops_el.append(option);
+		});
+	}); // End of directions_el change handler
+
+	// This initial fetch will get all the agencies
+	$.get(baseUrl + '?command=agencyList', function(xml) {
+		var $xml = $(xml);
+		$xml.find('agency').each(function(index, agency) {
+			var $agency = $(agency);
+			var option = document.createElement('option');
+			option.setAttribute('value', $agency.attr('tag'));
+			option.text = $agency.attr('title');
+			$agencies_el.append(option);
 		});
 	})
 	.done(function() {
 		// trigger a change event
-		$('#routes :first-child').change();
+		$('#agencies :first-child').change();
 	})
 	.fail(function() {
 		$('#debug').text('fail');
 	});
+
 });
