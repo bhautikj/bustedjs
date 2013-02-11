@@ -1,4 +1,29 @@
-.block {
+#dropdowns {
+	display: inline-block;
+	width: 33%;
+	opacity: 0;
+}
+
+.achg, .rchg {
+	opacity: 0;
+}
+
+label.choice {
 	display: block;
-	margin: 8px;
+	background-color: whitesmoke;
+	padding: 4px;
+	margin: 4px 0px;
+}
+
+label.choice select {
+	display: block;
+	margin: 2px;
+}
+
+/*
+ * Animations below
+ */
+@-webkit-keyframes fadeInAnimation {
+	from {opacity: 0;}
+	to {opacity: 1;}
 }

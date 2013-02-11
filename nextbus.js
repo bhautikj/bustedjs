@@ -1,6 +1,12 @@
 var rrr_xmldata;
 
 $(function() {
+	// Utility functions
+	var fadeIn = function(selector) {
+		$(selector).css('-webkit-animation', 'fadeInAnimation 600ms forwards');
+	};
+
+	// Handy declarations for common elements
 	var baseUrl = 'http://webservices.nextbus.com/service/publicXMLFeed';
 	var $agencies_el = $('#agencies');
 	var $routes_el = $('#routes');
@@ -13,7 +19,8 @@ $(function() {
 
 	// When the agencies dropdown changes...
 	$agencies_el.on('change', function(e) {
-		// Do cleanup
+		// Do cleanup; Make dropdowns invisible and clear route dropdown
+		$('.achg, .rchg').css('-webkit-animation', '');
 		$routes_el.empty();
 
 		var agency = $agencies_el.val();
@@ -32,6 +39,7 @@ $(function() {
 		.done(function() {
 			// trigger a change event
 			$('#routes :first-child').change();
+			fadeIn('.achg');
 		})
 		.fail(function() {
 			$('#debug').text('fail');
@@ -41,6 +49,7 @@ $(function() {
 	// When the routes dropdown changes...
 	$routes_el.on('change', function(e) {
 		// Do cleanup
+		$('.rchg').css('-webkit-animation', '');
 		$directions_el.empty();
 		$stops_el.empty();
 		stopMap = {};
@@ -79,9 +88,9 @@ $(function() {
 			});
 		}) // End of $.get for routeConfig
 		.done(function() {
-			$('#dropdowns').fadeIn();
 			// trigger a change event
 			$('#directions :first-child').change();
+			fadeIn('#dropdowns, .rchg');
 		}); // Done for $.get on routeConfig
 	}); // End of route_el change handler
 
