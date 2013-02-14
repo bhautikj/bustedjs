@@ -12,6 +12,8 @@ $(function() {
 	var $routes_el = $('#routes');
 	var $directions_el = $('#directions');
 	var $stops_el = $('#stops');
+	var $predictions_el = $('#predictions');
+
 	// stopMap is used for mapping stopTags to titles
 	var stopMap = {};
 	// directionStops is used for storing which stops are on each direction
@@ -25,7 +27,6 @@ $(function() {
 
 		var agency = $agencies_el.val();
 		// Get all the agency routes and put them in a dropdown
-		console.log('agency: ' + agency);
 		$.get(baseUrl + '?command=routeList&a=' + agency, function(xml) {
 			var $xml = $(xml);
 			$xml.find('route').each(function(index, route) {
@@ -106,7 +107,65 @@ $(function() {
 			option.text = stopMap[stopTag];
 			$stops_el.append(option);
 		});
+
+		// Trigger change on stops
+		$('#stops :first-child').change();
 	}); // End of directions_el change handler
+
+	// Function to retreive predictions and put them in #predictions
+	var get_predictions = function(e) {
+		// Clear the predictions div
+		$predictions_el.empty();
+
+		var agency = $agencies_el.val();
+		var route = $routes_el.val();
+		var stop = $stops_el.val();
+
+		$.get(baseUrl + '?command=predictions&a=' + agency + '&r=' + route + '&s=' + stop, function(xml) {
+			var $xml = $(xml);
+			var $directions = $xml.find('direction');
+			if ($directions.size() == 0) {
+				$predictions_el.html('<h3>No predictions available</h3>');
+			}
+
+			$directions.each(function(index, direction) {
+				var $direction = $(direction);
+				var direction_div = document.createElement('div');
+				direction_div.setAttribute('class', 'predictionDirection');
+				var $direction_div_el = $(direction_div);
+
+				// Add a heading to the ul
+				var heading = document.createElement('h3');
+				heading.innerHTML = $direction.attr('title');
+				$direction_div_el.append(heading);
+
+				// Add a ul to the direction div
+				var predictions_ul = document.createElement('ul');
+				$direction_div_el.append(predictions_ul);
+
+				var $predictions_ul_el = $(predictions_ul);
+				// Iterate over the predictions and add them to the ul
+				$direction.find('prediction').each(function(index, prediction) {
+					var $prediction = $(prediction);
+					var prediction_li = document.createElement('li');
+					var minutes = $prediction.attr('minutes');
+					if (minutes <= 0) {
+						prediction_li.innerHTML = 'Arriving';
+					} else {
+						prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
+					}
+
+					$predictions_ul_el.append(prediction_li);
+				});
+
+				$predictions_el.append($direction_div_el);
+			});
+		}); // End of fetching predictions
+	}; // End of get_predictions handler
+
+	// Get predictions when changing the stops or clicking refresh
+	$stops_el.on('change', get_predictions);
+	$('#refresh').on('click', get_predictions);
 
 	// This initial fetch will get all the agencies
 	$.get(baseUrl + '?command=agencyList', function(xml) {

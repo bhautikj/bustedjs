@@ -4,6 +4,11 @@
 	opacity: 0;
 }
 
+#refresh {
+	display: block;
+	margin: 10px 0px 0px 0px;
+}
+
 .achg, .rchg {
 	opacity: 0;
 }
