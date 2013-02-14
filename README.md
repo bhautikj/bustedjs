@@ -10,3 +10,9 @@ Here are some of the things I've worked with on this project:
 * jQuery/DOM manipulation
 * AJAX
 * CSS animations
+
+TODO
+====
+Automatic refresh - remove button  
+Style the predictions a little better  
+Do something better than dropdowns
