@@ -2,7 +2,7 @@ About
 =====
 
 This is a small personal project I use to learn some javascript/jquery/HTML5/CSS3
-stuff. I'm an aspiring web developer and like hands on learning.
+stuff. I have an interest in web development and hope to become more familiar with it.
 
 Summary
 =======
