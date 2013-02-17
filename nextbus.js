@@ -9,6 +9,14 @@ $(function() {
 		$(selector).css('-webkit-animation', 'fadeInAnimation 600ms forwards');
 	};
 
+	var padZeros = function(num) {
+		if (num < 10) {
+			return '0' + num;
+		}
+
+		return num;
+	};
+
 	// Handy declarations for common elements
 	var baseUrl = 'http://webservices.nextbus.com/service/publicXMLFeed';
 	var $agencies_el = $('#agencies');
@@ -152,10 +160,18 @@ $(function() {
 					var $prediction = $(prediction);
 					var prediction_li = document.createElement('li');
 					var minutes = $prediction.attr('minutes');
+					var seconds = $prediction.attr('seconds');
+					var arrivalTime = new Date();
+					arrivalTime.setTime(arrivalTime.getTime() + seconds*1000);
+
 					if (minutes <= 0) {
 						prediction_li.innerHTML = 'Arriving';
 					} else {
 						prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
+						prediction_li.innerHTML += ' (';
+						prediction_li.innerHTML += arrivalTime.getHours() + ':';
+						prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
+						prediction_li.innerHTML += ')';
 					}
 
 					$predictions_ul_el.append(prediction_li);
