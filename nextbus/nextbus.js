@@ -132,13 +132,13 @@ $(function() {
     var route = $routes_el.val();
     var stop = $stops_el.val();
 
+    var stopid = document.createElement('h2');
+    stopid.innerHTML =  route + '|' + stop;
+    $predictions_el.append(stopid);
+      
     $.get(baseUrl + '?command=predictions&a=' + agency + '&r=' + route + '&s=' + stop, function(xml) {
       var $xml = $(xml);
-      
-      var stopid = document.createElement('h2');
-      stopid.innerHTML =  route + '|' + stop;
-      $predictions_el.append(stopid);
-      
+            
       var $directions = $xml.find('direction');
       if ($directions.size() == 0) {
         $predictions_el.html('<h3>No predictions available</h3>');
