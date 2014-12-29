@@ -98,22 +98,26 @@ $(function() {
     
     var $queryURL = "http://webservices.nextbus.com/service/publicXMLFeed?command=predictionsForMultiStops&a="+$agency+$stopcode;
     
-    var queryURLDoc = document.createElement('div');
-    queryURLDoc.innerHTML =  $stopcode
-    $predictions_el.append($queryURL);
+//     var queryURLDoc = document.createElement('div');
+//     queryURLDoc.innerHTML =  $stopcode
+//     $predictions_el.append($queryURL);
     
     $.get($queryURL, function(xml) {
       var $xml = $(xml);
       var $predictions = $xml.find('predictions');
-      if ($predictions.size() == 0) {
-        $predictions_el.html('<h3>No predictions available</h3>');
-      }
+      
       
       $predictions.each(function(index, prediction) {
         var $prediction = $(prediction);
         var $directions = $prediction.find('direction');
         var $routeTitle = $prediction.attr('routeTitle');
         var $stopTitle = $prediction.attr('stopTitle');
+        
+        if ($directions.size() == 0) {
+          var errmsg = document.createElement('h3') ;
+          errmsg.innerHTML = "No predictions for " + $routeTitle + " at " + $stopTitle; 
+          $predictions_el.append(errmsg);
+        }
         
         $directions.each(function(index, direction) {
           var $direction = $(direction);
@@ -123,9 +127,12 @@ $(function() {
 
           // Add a heading to the ul
           var heading = document.createElement('h3') ;
-          heading.innerHTML = $routeTitle + " " + $direction.attr('title') + " [" + $stopTitle + "]";
+          heading.innerHTML = $routeTitle + " " + $direction.attr('title') 
           $direction_div_el.append(heading);
-
+          var stoploc = document.createElement('h4');
+          stoploc.innerHTML = $stopTitle;
+          $direction_div_el.append(stoploc);
+          
           // Add a ul to the direction div
           var predictions_ul = document.createElement('ul');
           $direction_div_el.append(predictions_ul);
@@ -159,10 +166,9 @@ $(function() {
       });
     });
    };
-  
-   
-  $('#refresh').on('click', get_predictions);
 
   // initialise
   get_predictions();
+  //execute every 30 seconds
+  var myVar=setInterval(function () {get_predictions()}, 30000);
 });
