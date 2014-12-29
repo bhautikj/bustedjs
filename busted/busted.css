@@ -1,0 +1,15 @@
+div.prediction {
+  display: block;
+  background-color: whitesmoke;
+  padding: 4px;
+  margin: 4px 0px;
+  width: 200px;
+}
+
+div.predictionTitle {
+  font-size: 100%;
+}
+
+div.predictionTitleSub {
+  font-size: 80%;
+}
