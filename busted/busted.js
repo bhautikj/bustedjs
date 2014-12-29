@@ -121,9 +121,10 @@ $(function() {
         
         
         if ($directions.size() == 0) {
-          var errmsg = document.createElement('h3') ;
-          errmsg.innerHTML = "No predictions for " + $routeTitle + " at " + $stopTitle; 
-          $prediction_div_el.append(errmsg);
+          var prediction_title = document.createElement('div');
+          prediction_title.setAttribute('class', 'predictionTitle');
+          prediction_title.innerHTML = "No predictions for " + $routeTitle + " at " + $stopTitle; 
+          $prediction_div_el.append(prediction_title);
         }
         
         $directions.each(function(index, direction) {
@@ -133,12 +134,15 @@ $(function() {
           var $direction_div_el = $(direction_div);
 
           // Add a heading to the ul
-          var heading = document.createElement('h3') ;
-          heading.innerHTML = $routeTitle + " " + $direction.attr('title') 
-          $direction_div_el.append(heading);
-          var stoploc = document.createElement('h4');
-          stoploc.innerHTML = $stopTitle;
-          $direction_div_el.append(stoploc);
+          var prediction_title = document.createElement('div');
+          prediction_title.setAttribute('class', 'predictionTitle');          
+          prediction_title.innerHTML = $routeTitle + " " + $direction.attr('title') 
+          $direction_div_el.append(prediction_title);
+
+          var prediction_title_sub = document.createElement('div');
+          prediction_title_sub.setAttribute('class', 'predictionTitleSub'); 
+          prediction_title_sub.innerHTML = $stopTitle;
+          $direction_div_el.append(prediction_title_sub);
           
           // Add a ul to the direction div
           var predictions_ul = document.createElement('ul');
