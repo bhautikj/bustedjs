@@ -85,7 +85,7 @@ $(function() {
   
    var $predictions_el = $('#predictions');
    var $agency = "sf-muni"
-   var $stops = ["19|3093","19|4845"];
+   var $stops = ["19|3093","19|4845","10|3313"];
   
 
    get_predictions = function() {
@@ -104,49 +104,58 @@ $(function() {
     
     $.get($queryURL, function(xml) {
       var $xml = $(xml);
-      var $directions = $xml.find('direction');
-      if ($directions.size() == 0) {
+      var $predictions = $xml.find('predictions');
+      if ($predictions.size() == 0) {
         $predictions_el.html('<h3>No predictions available</h3>');
       }
-      $directions.each(function(index, direction) {
-        var $direction = $(direction);
-        var direction_div = document.createElement('div');
-        direction_div.setAttribute('class', 'predictionDirection');
-        var $direction_div_el = $(direction_div);
+      
+      $predictions.each(function(index, prediction) {
+        var $prediction = $(prediction);
+        var $directions = $prediction.find('direction');
+        var $routeTitle = $prediction.attr('routeTitle');
+        var $stopTitle = $prediction.attr('stopTitle');
+        
+        $directions.each(function(index, direction) {
+          var $direction = $(direction);
+          var direction_div = document.createElement('div');
+          direction_div.setAttribute('class', 'predictionDirection');
+          var $direction_div_el = $(direction_div);
 
-        // Add a heading to the ul
-        var heading = document.createElement('h3') ;
-        heading.innerHTML = $direction.attr('title');
-        $direction_div_el.append(heading);
+          // Add a heading to the ul
+          var heading = document.createElement('h3') ;
+          heading.innerHTML = $routeTitle + " " + $direction.attr('title') + " [" + $stopTitle + "]";
+          $direction_div_el.append(heading);
 
-        // Add a ul to the direction div
-        var predictions_ul = document.createElement('ul');
-        $direction_div_el.append(predictions_ul);
+          // Add a ul to the direction div
+          var predictions_ul = document.createElement('ul');
+          $direction_div_el.append(predictions_ul);
 
-        var $predictions_ul_el = $(predictions_ul);
-        // Iterate over the predictions and add them to the ul
-        $direction.find('prediction').each(function(index, prediction) {
-          var $prediction = $(prediction);
-          var prediction_li = document.createElement('li');
-          var minutes = $prediction.attr('minutes');
-          var seconds = $prediction.attr('seconds');
-          var arrivalTime = new Date();
-          arrivalTime.setTime(arrivalTime.getTime() + seconds*1000);
+          var $predictions_ul_el = $(predictions_ul);
+          // Iterate over the predictions and add them to the ul
+          $direction.find('prediction').each(function(index, prediction) {
+            var $prediction = $(prediction);
+            var prediction_li = document.createElement('li');
+            var minutes = $prediction.attr('minutes');
+            var seconds = $prediction.attr('seconds');
+            var arrivalTime = new Date();
+            arrivalTime.setTime(arrivalTime.getTime() + seconds*1000);
 
-          if (minutes <= 0) {
-            prediction_li.innerHTML = 'Arriving';
-          } else {
-            prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
-            prediction_li.innerHTML += ' (';
-            prediction_li.innerHTML += arrivalTime.getHours() + ':';
-            prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
-            prediction_li.innerHTML += ')';
-          }
+            if (minutes <= 0) {
+              prediction_li.innerHTML = 'Arriving';
+            } else {
+              prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
+              prediction_li.innerHTML += ' (';
+              prediction_li.innerHTML += arrivalTime.getHours() + ':';
+              prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
+              prediction_li.innerHTML += ')';
+            }
 
-          $predictions_ul_el.append(prediction_li);
+            $predictions_ul_el.append(prediction_li);
+          });
+
+          $predictions_el.append($direction_div_el);
+          
         });
-
-        $predictions_el.append($direction_div_el);
       });
     });
    };
