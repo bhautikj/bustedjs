@@ -109,14 +109,21 @@ $(function() {
       
       $predictions.each(function(index, prediction) {
         var $prediction = $(prediction);
+        
+        var prediction_div = document.createElement('div');
+        prediction_div.setAttribute('class', 'prediction');
+        var $prediction_div_el = $(prediction_div);
+
         var $directions = $prediction.find('direction');
         var $routeTitle = $prediction.attr('routeTitle');
         var $stopTitle = $prediction.attr('stopTitle');
         
+        
+        
         if ($directions.size() == 0) {
           var errmsg = document.createElement('h3') ;
           errmsg.innerHTML = "No predictions for " + $routeTitle + " at " + $stopTitle; 
-          $predictions_el.append(errmsg);
+          $prediction_div_el.append(errmsg);
         }
         
         $directions.each(function(index, direction) {
@@ -160,9 +167,10 @@ $(function() {
             $predictions_ul_el.append(prediction_li);
           });
 
-          $predictions_el.append($direction_div_el);
-          
+          $prediction_div_el.append($direction_div_el);
         });
+        
+        $predictions_el.append($prediction_div_el);
       });
     });
    };
