@@ -71,3 +71,38 @@
 //   </predictions>
 //   </body>
 //
+
+
+$(function() {
+
+  var padZeros = function(num) {
+    if (num < 10) {
+      return '0' + num;
+    }
+
+    return num;
+  };
+  
+   var $predictions_el = $('#predictions');
+   var $agency = "sf-muni"
+   var $stops = ["19|3093","19|4845"];
+  
+
+   get_predictions = function() {
+    // Clear the predictions div
+    $predictions_el.empty();
+    var $stopcode = "";
+    for (index = 0; index < $stops.length; index++) {
+      $stopcode += '&stops=' + $stops[index];
+    }
+    var url = document.createElement('p');
+    url.innerHTML =  $stopcode
+    $predictions_el.append(url);
+   };
+  
+   
+  $('#refresh').on('click', get_predictions);
+
+  // initialise
+  get_predictions();
+});
