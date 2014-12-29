@@ -96,11 +96,59 @@ $(function() {
       $stopcode += '&stops=' + $stops[index];
     }
     
-    var $queryURL = " http://webservices.nextbus.com/service/publicXMLFeed?command=predictionsForMultiStops&a="+$agency+$stopcode;
+    var $queryURL = "http://webservices.nextbus.com/service/publicXMLFeed?command=predictionsForMultiStops&a="+$agency+$stopcode;
     
     var queryURLDoc = document.createElement('div');
     queryURLDoc.innerHTML =  $stopcode
     $predictions_el.append($queryURL);
+    
+    $.get($queryURL, function(xml) {
+      var $xml = $(xml);
+      var $directions = $xml.find('direction');
+      if ($directions.size() == 0) {
+        $predictions_el.html('<h3>No predictions available</h3>');
+      }
+      $directions.each(function(index, direction) {
+        var $direction = $(direction);
+        var direction_div = document.createElement('div');
+        direction_div.setAttribute('class', 'predictionDirection');
+        var $direction_div_el = $(direction_div);
+
+        // Add a heading to the ul
+        var heading = document.createElement('h3') ;
+        heading.innerHTML = $direction.attr('title');
+        $direction_div_el.append(heading);
+
+        // Add a ul to the direction div
+        var predictions_ul = document.createElement('ul');
+        $direction_div_el.append(predictions_ul);
+
+        var $predictions_ul_el = $(predictions_ul);
+        // Iterate over the predictions and add them to the ul
+        $direction.find('prediction').each(function(index, prediction) {
+          var $prediction = $(prediction);
+          var prediction_li = document.createElement('li');
+          var minutes = $prediction.attr('minutes');
+          var seconds = $prediction.attr('seconds');
+          var arrivalTime = new Date();
+          arrivalTime.setTime(arrivalTime.getTime() + seconds*1000);
+
+          if (minutes <= 0) {
+            prediction_li.innerHTML = 'Arriving';
+          } else {
+            prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
+            prediction_li.innerHTML += ' (';
+            prediction_li.innerHTML += arrivalTime.getHours() + ':';
+            prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
+            prediction_li.innerHTML += ')';
+          }
+
+          $predictions_ul_el.append(prediction_li);
+        });
+
+        $predictions_el.append($direction_div_el);
+      });
+    });
    };
   
    
