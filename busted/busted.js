@@ -95,9 +95,12 @@ $(function() {
     for (index = 0; index < $stops.length; index++) {
       $stopcode += '&stops=' + $stops[index];
     }
-    var url = document.createElement('p');
-    url.innerHTML =  $stopcode
-    $predictions_el.append(url);
+    
+    var $queryURL = " http://webservices.nextbus.com/service/publicXMLFeed?command=predictionsForMultiStops&a="+$agency+$stopcode;
+    
+    var queryURLDoc = document.createElement('div');
+    queryURLDoc.innerHTML =  $stopcode
+    $predictions_el.append($queryURL);
    };
   
    
