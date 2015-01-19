@@ -1,9 +1,46 @@
+body {
+  font-family: Helvetica, Arial, Sans-Serif;
+}
+
+html { 
+  background: url('https://farm3.staticflickr.com/2884/11833370896_d50581ca2f_b.jpg') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+div#predictions {
+   display: -webkit-flex;
+   display: flex;
+   -webkit-align-items: center;
+   align-items: center;
+   -webkit-justify-content: left;
+   justify-content: left;
+   /* You can set flex-wrap and flex-direction individually */
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   -webkit-flex-wrap: wrap;
+   flex-wrap: wrap;
+   /* Or do it all in one line with flex flow */
+   -webkit-flex-flow: row wrap;
+   flex-flow: row wrap;
+   /* tweak the where items line up on the row */
+   /* valid values are: flex-start, flex-end, space-between, space-around, stretch */
+   -webkit-align-content: flex-end;
+   align-content: flex-end;
+}
+
 div.prediction {
-  display: block;
-  background-color: whitesmoke;
+  display: block;   
+  color: white;
+  background-color: black;
   padding: 4px;
-  margin: 4px 0px;
+  margin: 4px 4px;
   width: 200px;
+  height: 200px;
+  height: 100%;
+  opacity: 0.8;
 }
 
 div.predictionTitle {
@@ -11,5 +48,8 @@ div.predictionTitle {
 }
 
 div.predictionTitleSub {
+  font-size: 80%;
+}
+div.predictionDirection {
   font-size: 80%;
 }
