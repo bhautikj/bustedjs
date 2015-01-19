@@ -101,7 +101,7 @@ $(function() {
     sec = "0" + sec; }
     if (hour < 10) {
     hour = "0" + hour; }
-    $('#clockElem').text( hour + ':' + min + ':' + sec);
+    $('#clockSpan').text( hour + ':' + min + ':' + sec);
    }
    
    get_predictions = function() {     
