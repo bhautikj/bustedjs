@@ -37,12 +37,12 @@ div#predictions {
   background-color: black;
   padding: 4px;
   margin: 4px 4px;
-  width: 200px;
-  min-width: 200px;
-  max-width: 200px;
-  height: 200px;
-  min-height:200px;
-  max-height:200px;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  height: 150px;
+  min-height:150px;
+  max-height:150px;
   opacity: 0.8;
   box-sizing:border-box;
   margin-left: auto;
@@ -51,9 +51,9 @@ div#predictions {
 }
 
 #clockElem {
-  font-size: 200%;
+  font-size: 150%;
   text-align: center;
-  line-height: 200px;
+  line-height: 150px;
 }
 
 #clockSpan {
@@ -66,12 +66,12 @@ div.prediction {
 }
 
 div.predictionTitle {
-  font-size: 100%;
+  font-size: 90%;
 }
 
 div.predictionTitleSub {
-  font-size: 80%;
+  font-size: 70%;
 }
 div.predictionDirection {
-  font-size: 80%;
+  font-size: 70%;
 }
