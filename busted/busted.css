@@ -31,7 +31,7 @@ div#predictions {
    align-content: flex-end;
 }
 
-div.prediction {
+.predictionStyle {
   display: block;   
   color: white;
   background-color: black;
@@ -41,6 +41,11 @@ div.prediction {
   height: 200px;
   height: 100%;
   opacity: 0.8;
+  box-sizing:border-box;
+}
+
+div.prediction {
+
 }
 
 div.predictionTitle {

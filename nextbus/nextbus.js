@@ -141,7 +141,7 @@ $(function() {
             
       var $directions = $xml.find('direction');
       if ($directions.size() == 0) {
-        $predictions_el.html('<h3>No predictions available</h3>');
+//         $predictions_el.html('<h3>No predictions available</h3>');
       }
 
       $directions.each(function(index, direction) {

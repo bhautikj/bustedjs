@@ -85,12 +85,29 @@ $(function() {
   
    var $predictions_el = $('#predictions');
    var $agency = "sf-muni"
-   var $stops = ["19|3093","19|4845","10|3313"];
-  
+   var $stops = ["9|6028","9L|6026","10|6189","19|4357","22|3317", "10|3313", "22|3313"];
 
-   get_predictions = function() {
-    // Clear the predictions div
-    $predictions_el.empty();
+//        $('#clockElem').text("DGGDG");
+
+  clock_tick = function() {
+    now = new Date();
+    hour = now.getHours();
+    min = now.getMinutes();
+    sec = now.getSeconds();
+
+    if (min <= 9) {
+    min = "0" + min; }
+    if (sec <= 9) {
+    sec = "0" + sec; }
+    if (hour < 10) {
+    hour = "0" + hour; }
+    $('#clockElem').text( hour + ':' + min + ':' + sec);
+   }
+   
+   get_predictions = function() {     
+    // Clear the predictions 
+    $('.prediction').remove();
+
     var $stopcode = "";
     for (index = 0; index < $stops.length; index++) {
       $stopcode += '&stops=' + $stops[index];
@@ -106,12 +123,12 @@ $(function() {
       var $xml = $(xml);
       var $predictions = $xml.find('predictions');
       
-      
       $predictions.each(function(index, prediction) {
         var $prediction = $(prediction);
         
         var prediction_div = document.createElement('div');
-        prediction_div.setAttribute('class', 'prediction');
+        prediction_div.setAttribute('class', 'prediction predictionStyle');
+//         prediction_div.setAttribute('class', 'liveElem');
         var $prediction_div_el = $(prediction_div);
 
         var $directions = $prediction.find('direction');
@@ -162,10 +179,10 @@ $(function() {
               prediction_li.innerHTML = 'Arriving';
             } else {
               prediction_li.innerHTML = minutes + (minutes == 1 ? ' minute' : ' minutes');
-              prediction_li.innerHTML += ' (';
-              prediction_li.innerHTML += arrivalTime.getHours() + ':';
-              prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
-              prediction_li.innerHTML += ')';
+//               prediction_li.innerHTML += ' (';
+//               prediction_li.innerHTML += arrivalTime.getHours() + ':';
+//               prediction_li.innerHTML += padZeros(arrivalTime.getMinutes());
+//               prediction_li.innerHTML += ')';
             }
 
             $predictions_ul_el.append(prediction_li);
@@ -183,4 +200,7 @@ $(function() {
   get_predictions();
   //execute every 30 seconds
   var myVar=setInterval(function () {get_predictions()}, 30000);
+  //clock tick every second
+  var myVar2=setInterval(function () {clock_tick()}, 1000);
+  
 });
